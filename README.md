@@ -73,8 +73,15 @@ codex plugin marketplace add A79-ai/scorm-kit
 codex plugin add scorm-kit@scorm-kit
 ```
 
-**ChatGPT**: if your workspace has Skills, upload the same `scorm-kit-skill.zip`.
-Otherwise, make a Custom GPT. Paste the body of `SKILL.md` as its instructions,
+**ChatGPT** (tested): upload the same `scorm-kit-skill.zip` under
+*Customize → Skills → Add → Upload from your computer*. Uploading a newer zip
+offers "Replace existing". Use it in **Work** mode: there, ChatGPT picks the skill
+up on its own when you attach a course, or you can add it from the skill's
+*Try in chat*. Plain Chat mode does not run skills. It reads the zip by hand
+and can get answer keys wrong. The card on the Skills page shows a summary that
+ChatGPT writes itself. The skill still uses the description from `SKILL.md`.
+
+Without Skills, make a Custom GPT. Paste the body of `SKILL.md` as its instructions,
 attach `scripts/scorm_kit.py`, `assets/viewer.html` and `references/formats.md`
 as knowledge, and turn on Code Interpreter. The script needs nothing beyond
 Python's standard library, so it runs in ChatGPT's sandbox.

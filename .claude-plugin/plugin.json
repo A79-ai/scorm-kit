@@ -1,8 +1,15 @@
 {
   "name": "scorm-kit",
-  "version": "1.0.0",
-  "description": "Parse SCORM 1.2 / 2004 (3rd, 4th Ed) packages from Articulate Rise 360, Storyline 360 or plain HTML into an LLM-ready kit (instructions.md, units, questions with answer keys, assets, viewer.html) and build pages or artifacts from it.",
+  "displayName": "SCORM Kit",
+  "version": "1.1.0",
+  "description": "Parse SCORM 1.2 / 2004 (3rd, 4th Ed) packages from Articulate Rise 360, Storyline 360 or plain HTML into an LLM-ready kit (instructions.md, units, questions with answer keys, assets, viewer.html) and build pages or artifacts from it. Runs offline.",
   "author": { "name": "AmpUp (A79)", "url": "https://ampup.ai" },
+  "homepage": "https://github.com/A79-ai/scorm-kit",
+  "repository": "https://github.com/A79-ai/scorm-kit",
   "license": "MIT",
-  "keywords": ["scorm", "elearning", "articulate", "rise", "storyline", "lms", "course"]
+  "keywords": ["scorm", "elearning", "articulate", "rise", "storyline", "lms", "course"],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://github.com/A79-ai/scorm-kit#readme",
+  "supportUrl": "https://github.com/A79-ai/scorm-kit/issues",
+  "privacyPolicyUrl": "https://github.com/A79-ai/scorm-kit/blob/main/PRIVACY.md"
 }

@@ -1,3 +1,5 @@
+<img src="assets/logo.png" alt="" width="72">
+
 # SCORM Kit
 
 Gets the content of a SCORM course back out of its LMS runtime: every lesson,
@@ -104,6 +106,16 @@ public packages are:
 
 To add a package that broke something, drop it in the fixtures folder and add
 a test case that names what it exercises. Issues and PRs welcome.
+
+## Privacy
+
+The skill collects nothing and makes no network calls. See [PRIVACY.md](PRIVACY.md).
+
+## Releasing
+
+Bump `version` in `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`, then push a
+`vX.Y.Z` tag. CI checks that the versions match the tag, runs the tests, builds
+`scorm-kit-skill.zip` and publishes the release.
 
 ## License
 

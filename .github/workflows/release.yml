@@ -1,0 +1,30 @@
+name: release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Manifest versions match the tag
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          for f in .claude-plugin/plugin.json .codex-plugin/plugin.json; do
+            v=$(python -c "import json,sys;print(json.load(open(sys.argv[1]))['version'])" "$f")
+            [ "$v" = "$tag" ] || { echo "$f is $v, tag is $tag"; exit 1; }
+          done
+      - run: python -m unittest discover -s tests -v
+      - name: Build the skill zip
+        run: cd skills && zip -r ../scorm-kit-skill.zip scorm-kit -x '*/__pycache__/*'
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" scorm-kit-skill.zip --verify-tag \
+            --title "$GITHUB_REF_NAME" --notes-file .github/release-notes.md

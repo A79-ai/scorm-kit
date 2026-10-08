@@ -1,10 +1,11 @@
 {
   "name": "scorm-kit",
+  "interface": { "displayName": "SCORM Kit" },
   "plugins": [
     {
       "name": "scorm-kit",
       "source": { "source": "local", "path": "./" },
-      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Productivity"
     }
   ]

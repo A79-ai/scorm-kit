@@ -1,18 +1,31 @@
 {
   "name": "scorm-kit",
-  "version": "1.0.0",
-  "description": "Parse SCORM 1.2 / 2004 (3rd, 4th Ed) packages from Articulate Rise 360, Storyline 360 or plain HTML into an LLM-ready kit and build pages from it.",
+  "version": "1.1.0",
+  "description": "Parse SCORM 1.2 / 2004 (3rd, 4th Ed) packages from Articulate Rise 360, Storyline 360 or plain HTML into an LLM-ready kit and build pages from it. Runs offline.",
   "author": { "name": "AmpUp (A79)", "url": "https://ampup.ai" },
+  "homepage": "https://github.com/A79-ai/scorm-kit",
+  "repository": "https://github.com/A79-ai/scorm-kit",
   "license": "MIT",
   "keywords": ["scorm", "elearning", "articulate", "rise", "storyline", "lms", "course"],
   "skills": "./skills/",
   "interface": {
     "displayName": "SCORM Kit",
-    "shortDescription": "Turn SCORM packages into LLM-ready content",
-    "longDescription": "Reads SCORM 1.2 and 2004 (3rd/4th Edition) packages from Articulate Rise 360, Storyline 360 or plain HTML SCOs. Exports instructions.md, per-unit markdown, questions with answer keys, assets and a viewer page, so you can rebuild the course as HTML, a quiz bank, slides or a summary.",
+    "shortDescription": "Course packages to LLM content",
+    "longDescription": "Reads SCORM 1.2 and 2004 (3rd/4th Edition) packages from Articulate Rise 360, Storyline 360 or plain HTML SCOs, and recovers every lesson, block, image and quiz answer key. Exports instructions.md, per-unit markdown, questions with answer keys, assets and a viewer page, so you can rebuild the course as an HTML page, a quiz bank, slides, a job aid or a summary. Refuses SCORM 1.1, 2004 2nd Edition, AICC, xAPI and cmi5 with a reason instead of guessing. Runs offline: no network calls, no data collected.",
     "developerName": "AmpUp (A79)",
     "category": "Productivity",
-    "capabilities": ["Interactive", "Write"],
-    "websiteURL": "https://ampup.ai"
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/A79-ai/scorm-kit",
+    "supportURL": "https://github.com/A79-ai/scorm-kit/issues",
+    "privacyPolicyURL": "https://github.com/A79-ai/scorm-kit/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/A79-ai/scorm-kit/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Turn this SCORM course into a one-page HTML microlearning page",
+      "Make a quiz bank CSV with answer keys from this course",
+      "What is inside this SCORM package?"
+    ],
+    "brandColor": "#2F6F5E",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/logo.svg"
   }
 }

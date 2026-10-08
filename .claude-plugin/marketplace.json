@@ -1,16 +1,13 @@
 {
   "name": "scorm-kit",
-  "owner": {
-    "name": "AmpUp (A79)"
-  },
-  "metadata": {
-    "description": "SCORM import and parsing know-how from AmpUp, packaged for Claude, Codex and ChatGPT."
-  },
+  "owner": { "name": "AmpUp (A79)", "url": "https://ampup.ai" },
+  "description": "SCORM import and parsing know-how from AmpUp, packaged for Claude, Codex and ChatGPT.",
   "plugins": [
     {
       "name": "scorm-kit",
       "source": "./",
-      "description": "Turn SCORM packages (Rise 360, Storyline 360, HTML) into an LLM-ready content kit."
+      "description": "Turn SCORM packages (Rise 360, Storyline 360, HTML) into an LLM-ready content kit.",
+      "category": "productivity"
     }
   ]
 }

@@ -1,0 +1,9 @@
+interface:
+  display_name: "SCORM Kit"
+  short_description: "Turn SCORM course packages into LLM-ready content"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#2F6F5E"
+  default_prompt: "Use $scorm-kit to turn the attached SCORM course into a one-page HTML microlearning page."
+policy:
+  allow_implicit_invocation: true

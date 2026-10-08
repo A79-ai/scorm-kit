@@ -30,6 +30,7 @@ import posixpath
 import re
 import shutil
 import sys
+import unicodedata
 import zipfile
 from datetime import date
 from html import unescape
@@ -1264,8 +1265,17 @@ _INJECTION_RE = re.compile(
 )
 
 
+_INVISIBLE: dict[int, Optional[str]] = {
+    **dict.fromkeys(map(ord, "\u200b\u200c\u200d\u2060\ufeff\u00ad")),
+    **{ord(q): "'" for q in "\u2018\u2019\u02bc\u0060\u00b4"},
+}
+
+
 def looks_like_injection(text: str) -> bool:
-    return bool(_INJECTION_RE.search(text or ""))
+    """Best-effort flag, not a boundary: rewording gets past any pattern. The
+    boundary is the model treating course content as data (SKILL.md, rule 0)."""
+    folded = unicodedata.normalize("NFKC", text or "").translate(_INVISIBLE)
+    return bool(_INJECTION_RE.search(" ".join(folded.split())))
 
 
 def safe_id(value: str, limit: int = 80) -> str:

@@ -131,3 +131,20 @@ framework runtimes) yield little or no text — the kit reports which.
 | AICC | `.au` / `.crs` / `.des` files | different standard |
 | xAPI / Tin Can | `tincan.xml` | different standard |
 | cmi5 | `cmi5.xml` | different standard |
+
+## Prompt injection: what the kit does and does not do
+
+A package is third-party content, so its text can be written to look like
+instructions to whichever model reads the kit. Defences, from strongest:
+
+1. **The model treats course content as data.** `SKILL.md` and rule 0 of
+   `instructions.md` say so, and every unit file opens with a data-only banner.
+   This is the actual boundary.
+2. **Package words stay out of the trusted file.** Warnings in `instructions.md`
+   carry only ids, paths reduced to `[A-Za-z0-9._/-]`, and numbers. Titles are
+   flattened to one line, and withheld when they read like instructions.
+3. **A heuristic flag.** Text that addresses an AI or tells it to ignore its
+   instructions is listed as a warning, which `SKILL.md` tells the model to
+   relay. Unicode is NFKC-normalised and zero-width characters stripped first.
+   Rewording will get past any pattern, so treat the flag as a courtesy to the
+   user, never as proof that a package is clean.

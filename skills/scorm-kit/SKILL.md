@@ -1,6 +1,6 @@
 ---
 name: scorm-kit
-description: Read a SCORM e-learning package (.zip from Articulate Rise 360, Storyline 360, or any SCORM 1.2 / 2004 3rd–4th Edition course) and turn it into an LLM-ready kit — instructions.md, a folder of parsed entities (units, blocks, questions with answer keys, assets) and a browsable viewer.html — then build what the user asks for from it (a single-file HTML page, artifact, quiz bank, slide outline, summary). Use when the user uploads or mentions a SCORM package, a Rise or Storyline export, an imsmanifest.xml, or asks to "extract", "convert", "repurpose" or "rebuild" an e-learning course.
+description: Use for ANY task that involves a SCORM or e-learning package (a course .zip with imsmanifest.xml, or an Articulate Rise 360 / Storyline 360 export) — summarizing it, extracting or converting its content, rebuilding it as an HTML page or artifact, making a quiz bank, slides, job aid or translation, or just saying what is inside. Always parse the package with this skill's script instead of unzipping and reading the runtime files by hand: it recovers every lesson, block, image and quiz answer key (SCORM 1.2 / 2004 3rd–4th Edition), writes instructions.md plus a folder of parsed entities and a viewer.html, and refuses formats it cannot read (SCORM 1.1, 2004 2nd Ed, AICC, xAPI, cmi5) with a reason.
 ---
 
 # SCORM kit

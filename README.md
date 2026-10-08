@@ -53,11 +53,15 @@ What we learned about each format, including the traps:
 
 To try it from a clone without installing, run `claude --plugin-dir .` in the repo root.
 
-**claude.ai**: zip the skill and upload it under *Settings → Capabilities → Skills*.
+**claude.ai** (tested): download `scorm-kit-skill.zip` from the
+[latest release](https://github.com/A79-ai/scorm-kit/releases/latest), then go to
+*Customize → Skills → Add → Upload skill*. Re-uploading a newer zip asks
+"Replace scorm-kit?" and keeps earlier versions in the skill's history. After
+that, attach a course `.zip` to any chat and ask for what you want; Claude picks
+the skill up on its own. Code execution must be on for your account. Upload
+limits apply, so very large video courses may need their media trimmed first.
 
-```bash
-cd skills && zip -r ../scorm-kit-skill.zip scorm-kit -x '*/__pycache__/*'
-```
+To build the zip yourself: `cd skills && zip -r ../scorm-kit-skill.zip scorm-kit -x '*/__pycache__/*'`.
 
 **Codex** (CLI and app)
 

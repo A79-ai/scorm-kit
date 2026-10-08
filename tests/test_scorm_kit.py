@@ -380,6 +380,17 @@ class Standards(unittest.TestCase):
         with self.assertRaises(scorm_kit.Unsupported):
             scorm_kit.build(path)
 
+    def test_entity_declarations_are_refused_in_any_encoding(self):
+        bomb = (
+            '<?xml version="1.0" encoding="UTF-16"?>'
+            '<!DOCTYPE m [<!ENTITY a "aaaa"><!ENTITY b "&a;&a;&a;">]>'
+            "<manifest><t>&b;</t></manifest>"
+        )
+        for raw in (bomb.encode("utf-16"), bomb.encode("utf-16-le")):
+            with self.assertRaises(scorm_kit.Unsupported) as caught:
+                scorm_kit.parse_manifest(raw)
+            self.assertIn("entities", str(caught.exception))
+
     def test_member_names_that_escape_on_any_os_are_refused(self):
         for name in (
             "..\\..\\evil.html",

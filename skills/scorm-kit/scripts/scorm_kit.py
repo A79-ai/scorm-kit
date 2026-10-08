@@ -39,6 +39,7 @@ from string import Template
 from typing import Any, Iterator, Optional
 from urllib.parse import unquote
 from xml.etree import ElementTree
+from xml.parsers import expat
 
 KIT_VERSION = "1.0.0"
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
@@ -226,14 +227,31 @@ def _text_of(node: Optional[ElementTree.Element]) -> str:
     return (node.text or "").strip() if node is not None else ""
 
 
+def _refuse_entities(*_: Any) -> None:
+    raise Unsupported("imsmanifest.xml declares XML entities; refusing to expand them")
+
+
+def _parse_xml(raw: bytes) -> ElementTree.Element:
+    """Parse XML with entity declarations refused by the parser itself.
+
+    Checked inside expat rather than by searching the bytes: a byte search
+    misses the same declaration in UTF-16 or any other encoding expat decodes,
+    and expansion is what turns a small manifest into gigabytes of text.
+    """
+    guard = expat.ParserCreate()
+    guard.EntityDeclHandler = _refuse_entities
+    guard.UnparsedEntityDeclHandler = _refuse_entities
+    try:
+        guard.Parse(raw, True)
+    except expat.ExpatError as exc:
+        raise ElementTree.ParseError(str(exc)) from exc
+    return ElementTree.fromstring(raw)
+
+
 def parse_manifest(raw: bytes) -> dict[str, Any]:
     """The parts of ``imsmanifest.xml`` a reader needs: version, outline, launch."""
-    if b"<!ENTITY" in raw:
-        raise Unsupported(
-            "imsmanifest.xml declares XML entities; refusing to expand them"
-        )
     try:
-        root = ElementTree.fromstring(raw)
+        root = _parse_xml(raw)
     except ElementTree.ParseError as exc:
         raise Unsupported(f"imsmanifest.xml is not valid XML: {exc}") from exc
 

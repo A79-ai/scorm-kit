@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCORM Package Viewer</title>
+<style>
+  :root {
+    --bg: #faf8f5; --surface: #ffffff; --ink: #1f1b16; --muted: #6b6259; --line: #e7e1d8;
+    --accent: #9a5b13; --accent-soft: #f6ead9; --warn-bg: #fff6e0; --warn-ink: #7a5300;
+    --ok: #1d7a46; --chip: #f1ede6;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171512; --surface: #201d19; --ink: #f1ece4; --muted: #a89e92; --line: #36312a;
+      --accent: #e0a35a; --accent-soft: #3a2c1b; --warn-bg: #3a2f14; --warn-ink: #f3d48a;
+      --ok: #62c98e; --chip: #2b2722;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171512; --surface: #201d19; --ink: #f1ece4; --muted: #a89e92; --line: #36312a;
+    --accent: #e0a35a; --accent-soft: #3a2c1b; --warn-bg: #3a2f14; --warn-ink: #f3d48a;
+    --ok: #62c98e; --chip: #2b2722;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); }
+  .page { max-width: 1120px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 32px; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .page { grid-template-columns: 320px minmax(0, 1fr); } .side { position: sticky; top: 24px; align-self: start; } }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  h1 { font-size: 20px; line-height: 1.3; margin: 0 0 8px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .badge.accent { background: var(--accent-soft); color: var(--accent); }
+  .counts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .count b { display: block; font-size: 20px; }
+  .count span { color: var(--muted); font-size: 12px; }
+  .bar { height: 6px; border-radius: 3px; background: var(--chip); overflow: hidden; margin: 4px 0 8px; }
+  .bar i { display: block; height: 100%; background: var(--accent); }
+  .row { display: flex; justify-content: space-between; font-size: 13px; }
+  .muted { color: var(--muted); }
+  .desc { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; }
+  .warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; }
+  .warn ul { margin: 6px 0 0; padding-left: 18px; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .toolbar input { flex: 1; min-width: 160px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; }
+  button { font: inherit; font-size: 13px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .group { font-size: 13px; font-weight: 600; color: var(--muted); margin: 24px 0 8px; }
+  details.unit { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+  details.unit > summary { list-style: none; cursor: pointer; padding: 12px 16px; display: flex; gap: 12px; align-items: baseline; }
+  details.unit > summary::-webkit-details-marker { display: none; }
+  .idx { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 2ch; }
+  .utitle { font-weight: 600; flex: 1; min-width: 0; }
+  .kind { font-size: 12px; color: var(--accent); white-space: nowrap; }
+  .blocks { border-top: 1px solid var(--line); padding: 8px 16px 16px; }
+  .block { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .block:last-child { border-bottom: 0; }
+  .blabel { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 4px; }
+  .btext { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .pics { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .pics img { height: 84px; max-width: 100%; border-radius: 6px; border: 1px solid var(--line); object-fit: cover; background: var(--chip); }
+  .q { margin-top: 6px; }
+  .q ul { list-style: none; padding: 0; margin: 6px 0; }
+  .q li { padding: 2px 0; }
+  .q li.right { color: var(--ok); font-weight: 600; }
+  .empty { color: var(--muted); padding: 24px 0; }
+  code { font-size: 12px; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main class="page">
+  <aside class="side" id="side"></aside>
+  <section id="main" aria-label="Course outline"></section>
+</main>
+<script>
+// scorm-kit inlines course.json here on export. To reuse this page as an
+// artifact template, replace the null below with the course JSON.
+const COURSE = /*__COURSE_JSON__*/null;
+
+const KIND_LABEL = { reading: "Reading", video: "Video", quiz: "Knowledge check", interactive: "Interaction" };
+const TOOL_LABEL = { rise: "Articulate Rise 360", storyline: "Articulate Storyline 360", html: "HTML SCOs" };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const mb = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} KB` : `${(b / 1e6).toFixed(1)} MB`;
+
+function render(course) {
+  const side = document.getElementById("side");
+  const main = document.getElementById("main");
+  if (!course) {
+    main.innerHTML = `<p class="empty">No course data. Run <code>scorm_kit.py export</code>, or paste course.json into this page.</p>`;
+    return;
+  }
+  document.title = `${course.title} · SCORM Package Viewer`;
+  const s = course.stats;
+  const copied = new Set(course.assets.filter((a) => a.copied).map((a) => a.path));
+  const files = Object.entries(s.files).sort((a, b) => b[1].bytes - a[1].bytes);
+  const total = files.reduce((n, [, v]) => n + v.bytes, 0) || 1;
+
+  side.innerHTML = `
+    <div class="card">
+      <h1>${esc(course.title)}</h1>
+      <div class="badges">
+        <span class="badge accent">${esc(TOOL_LABEL[course.source.tool] || course.source.tool)}</span>
+        <span class="badge">${esc(course.source.standard)}</span>
+      </div>
+      ${course.description ? `<p class="muted desc" title="${esc(course.description)}">${esc(course.description)}</p>` : ""}
+      <div class="counts">
+        ${[["units", course.source.tool === "rise" ? "lessons" : course.source.tool === "storyline" ? "slides" : "SCOs"],
+           ["questions", "graded questions"], ["images", "images"], ["words", "words"]]
+          .map(([k, label]) => `<div class="count"><b>${s[k].toLocaleString()}</b><span>${label}</span></div>`).join("")}
+      </div>
+      <p class="muted" style="font-size:12px;margin:12px 0 0">From <code>${esc(course.source.file)}</code> · scorm-kit ${esc(course.kit.version)}</p>
+    </div>
+    <div class="card">
+      <h2>Where the bytes go</h2>
+      ${files.map(([kind, v]) => `
+        <div class="row"><span>${esc(kind)}</span><span class="muted">${v.files} · ${mb(v.bytes)}</span></div>
+        <div class="bar"><i style="width:${(100 * v.bytes / total).toFixed(1)}%"></i></div>`).join("")}
+    </div>`;
+
+  const kinds = [...new Set(course.units.map((u) => u.kind))];
+  main.innerHTML = `
+    ${course.warnings.length ? `<div class="warn" role="note"><strong>Worth knowing about this package</strong>
+      <ul>${course.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Search the course text" aria-label="Search the course text">
+      ${kinds.map((k) => `<button type="button" data-kind="${esc(k)}" aria-pressed="false">${esc(KIND_LABEL[k] || k)}</button>`).join("")}
+      <button type="button" id="expand">Expand all</button>
+    </div>
+    <div id="units"></div>`;
+
+  const filter = { text: "", kinds: new Set() };
+  const draw = () => {
+    let group = null;
+    const html = [];
+    for (const u of course.units) {
+      const hay = (u.title + " " + u.blocks.map((b) => b.text + " " + b.questions.map((q) => q.prompt).join(" ")).join(" ")).toLowerCase();
+      if (filter.text && !hay.includes(filter.text)) continue;
+      if (filter.kinds.size && !filter.kinds.has(u.kind)) continue;
+      if (u.group && u.group !== group) { group = u.group; html.push(`<div class="group">${esc(group)}</div>`); }
+      html.push(unitHtml(u, copied, !!filter.text));
+    }
+    document.getElementById("units").innerHTML = html.join("") || `<p class="empty">Nothing matches.</p>`;
+  };
+  document.getElementById("q").addEventListener("input", (e) => { filter.text = e.target.value.trim().toLowerCase(); draw(); });
+  main.querySelectorAll("button[data-kind]").forEach((b) => b.addEventListener("click", () => {
+    const k = b.dataset.kind;
+    filter.kinds.has(k) ? filter.kinds.delete(k) : filter.kinds.add(k);
+    b.setAttribute("aria-pressed", String(filter.kinds.has(k)));
+    draw();
+  }));
+  document.getElementById("expand").addEventListener("click", (e) => {
+    const all = [...document.querySelectorAll("details.unit")];
+    const open = !all.every((d) => d.open);
+    all.forEach((d) => (d.open = open));
+    e.target.textContent = open ? "Collapse all" : "Expand all";
+  });
+  draw();
+}
+
+function unitHtml(u, copied, open) {
+  const qs = u.blocks.reduce((n, b) => n + b.questions.length, 0);
+  const meta = [`${u.blocks.length} blocks`, qs ? `${qs} questions` : "", u.duration_ms ? `${Math.round(u.duration_ms / 1000)}s` : ""].filter(Boolean).join(" · ");
+  return `<details class="unit"${open ? " open" : ""}>
+    <summary><span class="idx">${u.index}</span><span class="utitle">${esc(u.title)}<br><span class="muted" style="font-weight:400;font-size:13px">${meta}</span></span>
+      <span class="kind">${esc(KIND_LABEL[u.kind] || u.kind)}</span></summary>
+    <div class="blocks">${u.blocks.map((b) => blockHtml(b, copied)).join("") || `<p class="muted">No readable content.</p>`}</div>
+  </details>`;
+}
+
+function blockHtml(b, copied) {
+  const label = [b.family, b.variant].filter(Boolean).join(" · ") || b.kind;
+  const pics = b.images.map((p) => copied.has(p)
+    ? `<img src="assets/${esc(p)}" alt="${esc((b.alts || {})[p] || "")}" title="${esc((b.alts || {})[p] || "")}" loading="lazy">`
+    : `<span class="badge" title="${esc(p)}">image not copied</span>`).join("");
+  const media = b.media.map((p) => `<span class="badge" title="${esc(p)}">${esc(p.split("/").pop())}</span>`).join("");
+  const qs = b.questions.map((q) => `<div class="q"><strong>${esc(q.prompt)}</strong>
+    <ul>${q.choices.map((c) => `<li class="${c.correct ? "right" : ""}">${c.correct === true ? "✓" : c.correct === null ? "?" : "·"} ${esc(c.text)}</li>`).join("")}</ul>
+    ${q.feedback ? `<div class="muted">${esc(q.feedback)}</div>` : ""}
+    ${q.feedback_incorrect ? `<div class="muted">When wrong: ${esc(q.feedback_incorrect)}</div>` : ""}</div>`).join("");
+  return `<div class="block"><div class="blabel">${esc(label)}</div>
+    ${b.text && !b.questions.length ? `<div class="btext">${esc(b.text)}</div>` : ""}${qs}
+    ${pics || media ? `<div class="pics">${pics}${media}</div>` : ""}</div>`;
+}
+
+render(COURSE);
+</script>
+</body>
+</html>

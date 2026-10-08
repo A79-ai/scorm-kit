@@ -1,0 +1,18 @@
+{
+  "name": "scorm-kit",
+  "version": "1.0.0",
+  "description": "Parse SCORM 1.2 / 2004 (3rd, 4th Ed) packages from Articulate Rise 360, Storyline 360 or plain HTML into an LLM-ready kit and build pages from it.",
+  "author": { "name": "AmpUp (A79)", "url": "https://ampup.ai" },
+  "license": "MIT",
+  "keywords": ["scorm", "elearning", "articulate", "rise", "storyline", "lms", "course"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SCORM Kit",
+    "shortDescription": "Turn SCORM packages into LLM-ready content",
+    "longDescription": "Reads SCORM 1.2 and 2004 (3rd/4th Edition) packages from Articulate Rise 360, Storyline 360 or plain HTML SCOs. Exports instructions.md, per-unit markdown, questions with answer keys, assets and a viewer page, so you can rebuild the course as HTML, a quiz bank, slides or a summary.",
+    "developerName": "AmpUp (A79)",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://ampup.ai"
+  }
+}
